@@ -12,9 +12,28 @@ document.addEventListener("DOMContentLoaded", function () {
     const menuBtn = document.getElementById("menuBtn");
     const sidebar = document.getElementById("sidebar");
 
+    const mainContent = document.querySelector(".main-content");
+
     if (menuBtn && sidebar) {
         menuBtn.addEventListener("click", function () {
-            sidebar.classList.toggle("active");
+            const isMobile = window.innerWidth <= 768;
+
+            if (isMobile) {
+                sidebar.classList.toggle("active");
+                sidebar.classList.remove("collapsed");
+            } else {
+                sidebar.classList.toggle("collapsed");
+                sidebar.classList.remove("active");
+
+                if (mainContent) {
+                    mainContent.classList.toggle("expanded");
+                }
+            }
+
+            menuBtn.setAttribute(
+                "aria-expanded",
+                String(isMobile ? sidebar.classList.contains("active") : !sidebar.classList.contains("collapsed"))
+            );
         });
 
         // Close sidebar after selecting a navigation link on mobile
@@ -24,6 +43,51 @@ document.addEventListener("DOMContentLoaded", function () {
                     sidebar.classList.remove("active");
                 }
             });
+        });
+    }
+
+    // Show only the section selected in the sidebar.
+    const pageSections = Array.from(document.querySelectorAll(".page-section"));
+    const sectionIds = new Set(pageSections.map(function (section) {
+        return section.id;
+    }));
+
+    function showSelectedSection() {
+        const requestedId = window.location.hash.slice(1);
+        const selectedId = sectionIds.has(requestedId) ? requestedId : "dashboard";
+
+        pageSections.forEach(function (section) {
+            section.hidden = section.id !== selectedId;
+        });
+
+        sidebar.querySelectorAll("a").forEach(function (link) {
+            const isSelected = link.getAttribute("href") === "#" + selectedId;
+            link.setAttribute("aria-current", isSelected ? "page" : "false");
+        });
+    }
+
+    window.addEventListener("hashchange", showSelectedSection);
+    showSelectedSection();
+
+    const notificationBtn = document.getElementById("notificationBtn");
+    const notificationPanel = document.getElementById("notificationPanel");
+
+    if (notificationBtn && notificationPanel) {
+        notificationBtn.addEventListener("click", function (event) {
+            event.stopPropagation();
+
+            const isOpen = !notificationPanel.hidden;
+            notificationPanel.hidden = isOpen;
+            notificationBtn.setAttribute("aria-expanded", String(!isOpen));
+        });
+
+        document.addEventListener("click", function (event) {
+            if (!notificationPanel.hidden &&
+                !notificationPanel.contains(event.target) &&
+                event.target !== notificationBtn) {
+                notificationPanel.hidden = true;
+                notificationBtn.setAttribute("aria-expanded", "false");
+            }
         });
     }
 

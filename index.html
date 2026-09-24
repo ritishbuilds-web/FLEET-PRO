@@ -60,9 +60,14 @@
                     <span>🔍</span>
                 </div>
 
-                <button class="notification-btn" aria-label="Notifications">
+                <button class="notification-btn" id="notificationBtn" aria-label="Notifications" aria-expanded="false" aria-controls="notificationPanel">
                     🔔
                 </button>
+
+                <div class="notification-panel" id="notificationPanel" hidden>
+                    <h3>Notifications</h3>
+                    <p>No new notifications.</p>
+                </div>
 
                 <div class="user-profile">
                     <div class="user-avatar">A</div>

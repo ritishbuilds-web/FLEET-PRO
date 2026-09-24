@@ -132,6 +132,7 @@ body {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    position: relative;
     gap: 20px;
     min-height: 85px;
     padding: 15px 0;
@@ -195,6 +196,29 @@ body {
     cursor: pointer;
 }
 
+.notification-panel {
+    position: absolute;
+    top: 70px;
+    right: 95px;
+    z-index: 1100;
+    width: 240px;
+    padding: 16px;
+    background: #ffffff;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    box-shadow: 0 10px 25px rgba(15, 23, 42, 0.12);
+}
+
+.notification-panel h3 {
+    margin-bottom: 6px;
+    font-size: 15px;
+}
+
+.notification-panel p {
+    color: var(--text-secondary);
+    font-size: 13px;
+}
+
 .user-profile {
     display: flex;
     align-items: center;
@@ -233,6 +257,10 @@ body {
 .page-section {
     margin-bottom: 35px;
     scroll-margin-top: 25px;
+}
+
+.page-section[hidden] {
+    display: none !important;
 }
 
 .section-header {
@@ -744,4 +772,22 @@ body {
         box-shadow: none;
         border: 1px solid #ddd;
     }
+}
+
+/* Sidebar collapse */
+.sidebar {
+    transition: transform 0.3s ease;
+}
+
+.sidebar.collapsed {
+    transform: translateX(-100%);
+}
+
+/* Expand main content when sidebar is hidden */
+.main-content {
+    transition: margin-left 0.3s ease;
+}
+
+.main-content.expanded {
+    margin-left: 0;
 }
